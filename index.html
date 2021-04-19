@@ -6,15 +6,54 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Car play in the city</title>
+  <script src="./lib/ammo.js"></script>
+  <script src="./lib/Detector.js"></script>
+  <script>
+    // - Global variables -
+    let TRANSFORM_AUX;
+    let ZERO_QUATERNION;
+    let syncList = [];
+    const DISABLE_DEACTIVATION = 4;
+
+    // Graphics variables
+    let container, stats, speedometer;
+    let camera, controls, scene, renderer;
+    let terrainMesh, texture;
+    let clock;
+    let materialDynamic, materialStatic, materialInteractive;
+
+
+    // Physics variables
+    let collisionConfiguration;
+    let dispatcher;
+    let broadphase;
+    let solver;
+    let physicsWorld;
+
+    let time = 0;
+    let objectTimePeriod = 3;
+    let timeNextSpawn = time + objectTimePeriod;
+    let maxNumObjects = 30;
+
+    // Keybord actions
+    let actions = {};
+    const keysActions = {
+      "KeyW": 'acceleration',
+      "KeyS": 'braking',
+      "KeyA": 'left',
+      "KeyD": 'right'
+    };
+  </script>
+
+
 </head>
 
 <body>
-  <script src="/lib/three.min.js"></script>
-  <script src="/lib/phaser.min.js?ver=3.52.0"></script>
-  <script src="/lib/GLTFLoader.js"></script>
-  <script src="/lib/OrbitControls.js"></script>
-  <script src="/lib/enable3d/enable3d.phaserExtension.0.22.0-dev.1.min.js"></script>
-  <script type="module" src="/src/index.js"></script>
+  <div id="container"><br /><br /><br /><br /><br />Loading...</div>
+  <div id="speedometer">0.0 km/h</div>
+  <script type="module" src="./src/index.js">
+
+  </script>
 </body>
 
 </html>
