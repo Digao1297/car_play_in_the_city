@@ -35,7 +35,7 @@ export default function createVehicle(pos, quat, wireframe) {
 
     const steeringIncrement = .04;
     const steeringClamp = .5;
-    const maxEngineForce = 1000;
+    const maxEngineForce = 500;
     const maxBreakingForce = 50;
 
 
