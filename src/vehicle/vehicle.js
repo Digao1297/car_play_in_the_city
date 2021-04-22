@@ -14,7 +14,7 @@ export default function createVehicle(pos, quat, wireframe) {
 
     //back
     const wheelAxisPositionBack = -0.85;
-    const wheelRadiusBack = .5;
+    const wheelRadiusBack = .6;
     const wheelHalfTrackBack = 1.3;
     const wheelAxisHeightBack = -.6;
     const wheelWidthBack = .32;
@@ -23,20 +23,20 @@ export default function createVehicle(pos, quat, wireframe) {
     const wheelAxisFrontPosition = 1.6;
     const wheelHalfTrackFront = 1.3;
     const wheelAxisHeightFront = -.6;
-    const wheelRadiusFront = .5;
+    const wheelRadiusFront = .6;
     const wheelWidthFront = .3;
 
     const friction = 1000;
-    const suspensionStiffness = 30.0;
-    const suspensionDamping = 1.3;
-    const suspensionCompression = 2.4;
+    const suspensionStiffness = 50.0;
+    const suspensionDamping = .3;
+    const suspensionCompression = 1.4;
     const suspensionRestLength = 0.6;
     const rollInfluence = 0.2;
 
     const steeringIncrement = .04;
     const steeringClamp = .5;
-    const maxEngineForce = 1300;
-    const maxBreakingForce = 100;
+    const maxEngineForce = 1000;
+    const maxBreakingForce = 50;
 
 
     // Chassis
@@ -46,7 +46,7 @@ export default function createVehicle(pos, quat, wireframe) {
     transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
     transform.setRotation(new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w));
     const motionState = new Ammo.btDefaultMotionState(transform);
-    const localInertia = new Ammo.btVector3(0, 0, 0);
+    const localInertia = new Ammo.btVector3(0, 0,0);
     geometry.calculateLocalInertia(massVehicle, localInertia);
     const body = new Ammo.btRigidBody(new Ammo.btRigidBodyConstructionInfo(massVehicle, motionState, geometry, localInertia));
     body.setActivationState(DISABLE_DEACTIVATION);
@@ -54,7 +54,9 @@ export default function createVehicle(pos, quat, wireframe) {
 
 
     //loading car
-    return createChassisMesh().then((chassisMesh) => {
+    return createChassisMesh().then( (chassisMesh)  => {
+
+        chassisMesh.castShadow = true
 
         let mesh
         if (wireframe) {
@@ -109,102 +111,107 @@ export default function createVehicle(pos, quat, wireframe) {
             wheelInfo.set_m_frictionSlip(friction);
             wheelInfo.set_m_rollInfluence(rollInfluence);
 
+              return createWheelMesh(pos.x() >0?'left':'right').then((obj) => {
+                 wheelMeshes[index] = obj
+             })
 
-            wheelMeshes[index] = createWheelMesh(radius, width, pos);
         }
+        Promise.all([
+            addWheel(true, new Ammo.btVector3(wheelHalfTrackFront, wheelAxisHeightFront, wheelAxisFrontPosition), wheelRadiusFront, wheelWidthFront, FRONT_LEFT),
+            addWheel(true, new Ammo.btVector3(-wheelHalfTrackFront, wheelAxisHeightFront, wheelAxisFrontPosition), wheelRadiusFront, wheelWidthFront, FRONT_RIGHT),
+            addWheel(false, new Ammo.btVector3(-wheelHalfTrackBack, wheelAxisHeightBack, wheelAxisPositionBack), wheelRadiusBack, wheelWidthBack, BACK_LEFT),
+            addWheel(false, new Ammo.btVector3(wheelHalfTrackBack, wheelAxisHeightBack, wheelAxisPositionBack), wheelRadiusBack, wheelWidthBack, BACK_RIGHT),
+        ]).then(()=> {
+            // Sync keybord actions and physics and graphics
+            function sync(dt) {
 
-        addWheel(true, new Ammo.btVector3(wheelHalfTrackFront, wheelAxisHeightFront, wheelAxisFrontPosition), wheelRadiusFront, wheelWidthFront, FRONT_LEFT);
-        addWheel(true, new Ammo.btVector3(-wheelHalfTrackFront, wheelAxisHeightFront, wheelAxisFrontPosition), wheelRadiusFront, wheelWidthFront, FRONT_RIGHT);
-        addWheel(false, new Ammo.btVector3(-wheelHalfTrackBack, wheelAxisHeightBack, wheelAxisPositionBack), wheelRadiusBack, wheelWidthBack, BACK_LEFT);
-        addWheel(false, new Ammo.btVector3(wheelHalfTrackBack, wheelAxisHeightBack, wheelAxisPositionBack), wheelRadiusBack, wheelWidthBack, BACK_RIGHT);
+                let speed = vehicle.getCurrentSpeedKmHour();
+
+                drawSpeedo(Math.abs(speed), 0, 0, 160);
 
 
-        // Sync keybord actions and physics and graphics
-        function sync(dt) {
+                breakingForce = 0;
+                engineForce = 0;
 
-            let speed = vehicle.getCurrentSpeedKmHour();
-
-            drawSpeedo(Math.abs(speed), 0, 0, 160);
-
-
-            breakingForce = 0;
-            engineForce = 0;
-
-            if (actions.acceleration) {
-                if (speed < -1)
-                    breakingForce = maxBreakingForce;
-                else engineForce = maxEngineForce;
-            }
-            if (actions.braking) {
-                if (speed > 1)
-                    breakingForce = maxBreakingForce;
-                else engineForce = -maxEngineForce / 2;
-            }
-            if (actions.left) {
-                if (vehicleSteering < steeringClamp)
-                    vehicleSteering += steeringIncrement;
-            }
-            else {
-                if (actions.right) {
-                    if (vehicleSteering > -steeringClamp)
-                        vehicleSteering -= steeringIncrement;
+                if (actions.acceleration) {
+                    if (speed < -1)
+                        breakingForce = maxBreakingForce;
+                    else engineForce = maxEngineForce;
+                }
+                if (actions.braking) {
+                    if (speed > 1)
+                        breakingForce = maxBreakingForce;
+                    else engineForce = -maxEngineForce / 2;
+                }
+                if (actions.left) {
+                    if (vehicleSteering < steeringClamp)
+                        vehicleSteering += steeringIncrement;
                 }
                 else {
-                    if (vehicleSteering < -steeringIncrement)
-                        vehicleSteering += steeringIncrement;
-                    else {
-                        if (vehicleSteering > steeringIncrement)
+                    if (actions.right) {
+                        if (vehicleSteering > -steeringClamp)
                             vehicleSteering -= steeringIncrement;
+                    }
+                    else {
+                        if (vehicleSteering < -steeringIncrement)
+                            vehicleSteering += steeringIncrement;
                         else {
-                            vehicleSteering = 0;
+                            if (vehicleSteering > steeringIncrement)
+                                vehicleSteering -= steeringIncrement;
+                            else {
+                                vehicleSteering = 0;
+                            }
                         }
                     }
                 }
-            }
 
-            vehicle.applyEngineForce(engineForce, BACK_LEFT);
-            vehicle.applyEngineForce(engineForce, BACK_RIGHT);
+                vehicle.applyEngineForce(engineForce, BACK_LEFT);
+                vehicle.applyEngineForce(engineForce, BACK_RIGHT);
+                vehicle.applyEngineForce(engineForce, FRONT_LEFT);
+                vehicle.applyEngineForce(engineForce, FRONT_RIGHT);
 
 
 
+                vehicle.setBrake(breakingForce / 2, FRONT_LEFT);
+                vehicle.setBrake(breakingForce / 2, FRONT_RIGHT);
+                vehicle.setBrake(breakingForce, BACK_LEFT);
+                vehicle.setBrake(breakingForce, BACK_RIGHT);
 
-            vehicle.setBrake(breakingForce / 2, FRONT_LEFT);
-            vehicle.setBrake(breakingForce / 2, FRONT_RIGHT);
-            vehicle.setBrake(breakingForce, BACK_LEFT);
-            vehicle.setBrake(breakingForce, BACK_RIGHT);
+                vehicle.setSteeringValue(vehicleSteering, FRONT_LEFT);
+                vehicle.setSteeringValue(vehicleSteering, FRONT_RIGHT);
 
-            vehicle.setSteeringValue(vehicleSteering, FRONT_LEFT);
-            vehicle.setSteeringValue(vehicleSteering, FRONT_RIGHT);
+                let tm, p, q, i;
+                let n = vehicle.getNumWheels();
+                for (i = 0; i < n; i++) {
+                    vehicle.updateWheelTransform(i, true);
+                    tm = vehicle.getWheelTransformWS(i);
+                    p = tm.getOrigin();
+                    q = tm.getRotation();
 
-            let tm, p, q, i;
-            let n = vehicle.getNumWheels();
-            for (i = 0; i < n; i++) {
-                vehicle.updateWheelTransform(i, true);
-                tm = vehicle.getWheelTransformWS(i);
+                    wheelMeshes[i].position.set(p.x(), p.y(), p.z());
+                    wheelMeshes[i].quaternion.set(q.x(), q.y(), q.z(), q.w());
+                }
+
+                tm = vehicle.getChassisWorldTransform();
                 p = tm.getOrigin();
                 q = tm.getRotation();
+                chassisMesh.position.set(p.x(), p.y(), p.z());
+                chassisMesh.quaternion.set(q.x(), q.y(), q.z(), q.w());
 
-                wheelMeshes[i].position.set(p.x(), p.y(), p.z());
-                wheelMeshes[i].quaternion.set(q.x(), q.y(), q.z(), q.w());
+                if (mesh != null) {
+                    mesh.position.set(p.x(), p.y(), p.z());
+                    mesh.quaternion.set(q.x(), q.y(), q.z(), q.w());
+                }
+                controls.target.set(p.x(), p.y(), p.z())
+
+
+
             }
 
-            tm = vehicle.getChassisWorldTransform();
-            p = tm.getOrigin();
-            q = tm.getRotation();
-            chassisMesh.position.set(p.x(), p.y(), p.z());
-            chassisMesh.quaternion.set(q.x(), q.y(), q.z(), q.w());
-
-            if (mesh != null) {
-                mesh.position.set(p.x(), p.y(), p.z());
-                mesh.quaternion.set(q.x(), q.y(), q.z(), q.w());
-            }
-            controls.target.set(p.x(), p.y(), p.z())
-
-
-
-        }
-
-        syncList.push(sync);
+            syncList.push(sync);
+        })
     })
+
+        
 
 }

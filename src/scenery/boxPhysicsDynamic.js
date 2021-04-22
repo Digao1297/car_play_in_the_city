@@ -20,7 +20,7 @@ export default function createBoxPhysicsDynamic(name, pos, size, quat, mass, fri
 
     return loadObject(`../assets/${name}`).then((obj) => {
 
-
+        obj.castShadow = true
 
         if (!mass) mass = 0;
         if (!friction) friction = 1;

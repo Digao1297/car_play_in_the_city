@@ -8,6 +8,7 @@ import { keyup, keydown } from "./input/index.js"
 import createBox from "./scenery/box.js"
 import createVehicle from "./vehicle/vehicle.js"
 import createBuilding from "./scenery/building.js"
+import createParticles from "./scenery/particles.js"
 import createChassisMesh from "./vehicle/chassis.js"
 import createBoxPhysicsStatic from "./scenery/boxPhysicsStatic.js"
 import createBoxPhysicsDynamic from "./scenery/boxPhysicsDynamic.js"
@@ -31,6 +32,9 @@ function initGraphics() {
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setSize(window.innerWidth, window.innerHeight);
 
+	renderer.shadowMap.enabled = true;
+	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 	camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.2, 1000);
 	controls = new OrbitControls(camera, renderer.domElement);
 
@@ -43,14 +47,21 @@ function initGraphics() {
 	controls.maxDistance = 100;
 
 	skybox()
+	createParticles()
+
+
 
 	const ambientLight = new THREE.AmbientLight(0x404040);
 	scene.add(ambientLight);
 
 	const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-	dirLight.position.set(10, 10, 5);
+	dirLight.position.set(-30, 20, -30);
+	
+
 	scene.add(dirLight);
 
+
+	
 	materialDynamic = new THREE.MeshPhongMaterial({ color: 0xfca400 });
 	materialStatic = new THREE.MeshPhongMaterial({ color: 0x2F2B2C });
 	materialRamp = new THREE.MeshPhongMaterial({ color: 0x0060c4 });
@@ -69,6 +80,16 @@ function initGraphics() {
 	window.addEventListener('resize', onWindowResize, false);
 	window.addEventListener('keydown', keydown);
 	window.addEventListener('keyup', keyup);
+
+	const buttonStart = document.getElementById('button')
+	buttonStart.addEventListener("click", () => {
+		startGame()
+	})
+
+	const buttonWeather = document.getElementById('changeWeather')
+	buttonWeather.addEventListener("click", () => {
+		changeWeather()
+	})
 }
 
 function onWindowResize() {
@@ -143,7 +164,7 @@ function createObjects() {
 	quaternionCarWhite.setFromAxisAngle(new THREE.Vector3(0, 1, 0), 0.3);
 
 	const loading = Promise.all(
-		[createVehicle(new THREE.Vector3(0, 0, -10), ZERO_QUATERNION, wireframe),
+		[createVehicle(new THREE.Vector3(0, 2, -10), ZERO_QUATERNION, wireframe),
 		//carregando os predios e adicionando fisica
 		createBuilding("yellow_building.3mf", { x: 16.5, y: 5, z: 15.4 }, { w: 23.7, l: 10, h: 23.5 }, ZERO_QUATERNION, wireframe),
 
@@ -189,21 +210,32 @@ function createObjects() {
 		createBoxPhysicsDynamic("car_white.3mf", { x: 30, y: 1.3, z: -28 }, { w: 2.4, l: 2.5, h: 5 }, quaternionCarWhite, 800, 1, wireframe),
 		]);
 
-	loadObject("../assets/city.3mf").then((fbx) => {
-		scene.add(fbx)
+	loadObject("../assets/city.3mf").then((obj) => {
+		obj.receiveShadow = true
+		scene.add(obj)
 	})
 
-	loadObject("../assets/lines.3mf").then((fbx) => {
-		scene.add(fbx)
+	loadObject("../assets/lines.3mf").then((obj) => {
+		obj.castShadow = true
+
+		scene.add(obj)
 	})
+
 
 }
 
 
 
+function changeWeather() {
+	weather = !weather
+}
 
+function startGame() {
+	document.getElementById("initialPage").style.display = "none";
+	document.getElementById("container").style.display = "block";
 
-
+	tick();
+}
 
 function start() {
 
@@ -226,7 +258,7 @@ function start() {
 	initGraphics();
 	initPhysics();
 	createObjects();
-	tick();
+
 }
 
 

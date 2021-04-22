@@ -5,8 +5,8 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Car play in the city</title>
-
+  <title> Car play in the city</title>
+  <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="./src/style/style.css">
 
   <script src="./lib/ammo.js"></script>
@@ -25,7 +25,7 @@
     let terrainMesh, texture;
     let clock;
     let materialDynamic, materialStatic, materialInteractive, materialRamp;
-
+    let weather = false;
 
     // Physics variables
     let collisionConfiguration;
@@ -49,35 +49,37 @@
       "KeyD": 'right'
     };
 
-    function startGame() {
-      document.getElementById("initialPage").style.display = "none";
-    }
+
   </script>
 
 </head>
 
 <body>
-  <div id="initialPage">
 
+  <div id="container"></div>
+
+
+  <script type="module" src="./src/index.js"></script>
+
+  <div id="initialPage">
     <div class="controls">
       Use your <img width="200" src="./assets/images/control.png" /> keys to move around
     </div>
     <div id="start">
-      <a id="button" onclick="startGame()">Start</a>
+      <a id="button">Start</a>
     </div>
   </div>
 
 
 
-  <div id="container"></div>
-  <!-- <div id="speedometer">0.0 km/h</div> -->
-  <canvas id="speedometer"></canvas>
+  <a id="changeWeather">
+    clima
+  </a>
 
+
+  <canvas id="speedometer"></canvas>
   <script src="./src/speed_meter/teslahud.js"></script>
 
-  <script type="module" src="./src/index.js">
-
-  </script>
 </body>
 
 </html>

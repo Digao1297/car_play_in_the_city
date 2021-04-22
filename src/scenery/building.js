@@ -8,7 +8,7 @@ export default function createBuilding(name, pos, size, quat, wireframe = false)
 
     return loadObject(`../assets/${name}`).then((obj) => {
 
-
+        obj.castShadow = true
 
         if (wireframe) {
             const material = new THREE.MeshBasicMaterial({

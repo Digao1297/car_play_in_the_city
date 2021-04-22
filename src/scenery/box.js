@@ -12,9 +12,12 @@ export default function createBox(pos, quat, w, l, h, mass, friction, ramp = fal
     }
     else if (ramp) {
         material = materialRamp
+        shape.receiveShadow = true
+
     }
     else {
         material = materialStatic
+        shape.receiveShadow = true
     }
 
     if (!mass) mass = 0;

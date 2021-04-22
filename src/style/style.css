@@ -9,7 +9,11 @@ body{
 #container{
     width: 100%;
     height: 100%;
+    display: none;
 }
+
+
+
 
 #speedometer{
     z-index: 1;
@@ -71,4 +75,31 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#changeWeather{
+    z-index: 1;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+
+    background-color: #FA8C3F;
+    padding: 1rem;
+    width: 50px;
+    
+    color: white;
+    font-size: 16px;
+    font-family: 'MuseoSans_900-webfont';
+
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+#changeWeather:hover{
+    cursor: pointer;
+    opacity: 0.6;
+
 }
