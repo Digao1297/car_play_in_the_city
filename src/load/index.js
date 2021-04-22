@@ -8,21 +8,20 @@ export default function loadObject(path, scale = { x: 0.01, y: 0.01, z: 0.01 }) 
 
 
     return new Promise((resolve, reject) => {
-        loader.load(path, function (fbx) {
-            const mixer = new THREE.AnimationMixer(fbx);
-            console.log(fbx);
-            // const action = mixer.clipAction(fbx.animations[0]);
+        loader.load(path, function (obj) {
+            const mixer = new THREE.AnimationMixer(obj);
+            // const action = mixer.clipAction(obj.animations[0]);
             // action.play();
 
-            fbx.traverse((child) => {
+            obj.traverse((child) => {
                 if (child.isMesh) {
                     child.castShadow = true;
                     child.receiveShadow = true;
                 }
             });
-            if (fbx != null) {
-                fbx.scale.set(scale.x, scale.y, scale.z)
-                resolve(fbx)
+            if (obj != null) {
+                obj.scale.set(scale.x, scale.y, scale.z)
+                resolve(obj)
             }
         })
     });

@@ -1,0 +1,74 @@
+body{
+    margin: 0;
+}
+
+@font-face {
+    font-family: 'MuseoSans_900-webfont';
+    src: url('../../assets/fonts/MuseoSans_900-webfont.ttf');
+}
+#container{
+    width: 100%;
+    height: 100%;
+}
+
+#speedometer{
+    z-index: 1;
+    position: fixed;
+    left: 50%;
+    bottom: 0px;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
+}
+#start{
+    z-index: 2;
+    position: absolute;
+    background-image: linear-gradient(#FA8C3F, #F9BF83);
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#button{
+    width: 200px;
+    height: 100px;
+    
+    border-radius: 50px;
+    background: #F6A561;
+    box-shadow:  27px -27px 51px #e5995a,
+             -27px 27px 51px #ffb168;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 32px;
+    font-family: 'MuseoSans_900-webfont';
+}
+
+#button:hover{
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+
+.controls{
+    z-index: 3;
+    position: fixed;
+    left: 50%;
+    bottom: 0px;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
+
+    color: white;
+    font-size: 16px;
+    font-family: 'MuseoSans_900-webfont';
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

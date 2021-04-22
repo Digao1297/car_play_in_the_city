@@ -3,39 +3,39 @@ import loadObject from "../load/index.js"
 import createChassisMesh from "./chassis.js"
 import createWheelMesh from "./wheel.js"
 
-export default function createVehicle(pos, quat) {
+export default function createVehicle(pos, quat, wireframe) {
 
     // Vehicle contants
 
-    const chassisWidth = 1.8;
-    const chassisHeight = .6;
-    const chassisLength = 4;
-    const massVehicle = 800;
+    const chassisWidth = 3;
+    const chassisHeight = 2;
+    const chassisLength = 4.7;
+    const massVehicle = 700;
 
     //back
-    const wheelAxisPositionBack = -0.8;
+    const wheelAxisPositionBack = -0.85;
     const wheelRadiusBack = .5;
-    const wheelWidthBack = .3;
     const wheelHalfTrackBack = 1.3;
-    const wheelAxisHeightBack = .3;
+    const wheelAxisHeightBack = -.6;
+    const wheelWidthBack = .32;
 
     //front
-    const wheelAxisFrontPosition = 1.7;
+    const wheelAxisFrontPosition = 1.6;
     const wheelHalfTrackFront = 1.3;
-    const wheelAxisHeightFront = .3;
+    const wheelAxisHeightFront = -.6;
     const wheelRadiusFront = .5;
-    const wheelWidthFront = .2;
+    const wheelWidthFront = .3;
 
     const friction = 1000;
-    const suspensionStiffness = 20.0;
-    const suspensionDamping = 2.3;
-    const suspensionCompression = 4.4;
+    const suspensionStiffness = 30.0;
+    const suspensionDamping = 1.3;
+    const suspensionCompression = 2.4;
     const suspensionRestLength = 0.6;
     const rollInfluence = 0.2;
 
     const steeringIncrement = .04;
     const steeringClamp = .5;
-    const maxEngineForce = 2000;
+    const maxEngineForce = 1300;
     const maxBreakingForce = 100;
 
 
@@ -52,10 +52,24 @@ export default function createVehicle(pos, quat) {
     body.setActivationState(DISABLE_DEACTIVATION);
     physicsWorld.addRigidBody(body);
 
-    //loading car
-    createChassisMesh().then((chassisMesh) => {
 
-        console.log(chassisMesh);
+    //loading car
+    return createChassisMesh().then((chassisMesh) => {
+
+        let mesh
+        if (wireframe) {
+
+            const material = new THREE.MeshBasicMaterial({
+                color: 0x44aa88,
+                wireframe: true,
+            });
+            const shape = new THREE.BoxGeometry(chassisWidth, chassisHeight, chassisLength, 1, 1, 1);
+            mesh = new THREE.Mesh(shape, material);
+            mesh.position.copy(pos);
+            mesh.quaternion.copy(quat);
+            scene.add(mesh);
+
+        }
 
         // Raycast Vehicle
         let engineForce = 0;
@@ -87,13 +101,16 @@ export default function createVehicle(pos, quat) {
                 tuning,
                 isFront);
 
+
+
             wheelInfo.set_m_suspensionStiffness(suspensionStiffness);
             wheelInfo.set_m_wheelsDampingRelaxation(suspensionDamping);
             wheelInfo.set_m_wheelsDampingCompression(suspensionCompression);
             wheelInfo.set_m_frictionSlip(friction);
             wheelInfo.set_m_rollInfluence(rollInfluence);
 
-            wheelMeshes[index] = createWheelMesh(radius, width);
+
+            wheelMeshes[index] = createWheelMesh(radius, width, pos);
         }
 
         addWheel(true, new Ammo.btVector3(wheelHalfTrackFront, wheelAxisHeightFront, wheelAxisFrontPosition), wheelRadiusFront, wheelWidthFront, FRONT_LEFT);
@@ -101,12 +118,14 @@ export default function createVehicle(pos, quat) {
         addWheel(false, new Ammo.btVector3(-wheelHalfTrackBack, wheelAxisHeightBack, wheelAxisPositionBack), wheelRadiusBack, wheelWidthBack, BACK_LEFT);
         addWheel(false, new Ammo.btVector3(wheelHalfTrackBack, wheelAxisHeightBack, wheelAxisPositionBack), wheelRadiusBack, wheelWidthBack, BACK_RIGHT);
 
+
         // Sync keybord actions and physics and graphics
         function sync(dt) {
 
             let speed = vehicle.getCurrentSpeedKmHour();
 
-            speedometer.innerHTML = (speed < 0 ? '(R) ' : '') + Math.abs(speed).toFixed(1) + ' km/h';
+            drawSpeedo(Math.abs(speed), 0, 0, 160);
+
 
             breakingForce = 0;
             engineForce = 0;
@@ -146,6 +165,9 @@ export default function createVehicle(pos, quat) {
             vehicle.applyEngineForce(engineForce, BACK_LEFT);
             vehicle.applyEngineForce(engineForce, BACK_RIGHT);
 
+
+
+
             vehicle.setBrake(breakingForce / 2, FRONT_LEFT);
             vehicle.setBrake(breakingForce / 2, FRONT_RIGHT);
             vehicle.setBrake(breakingForce, BACK_LEFT);
@@ -171,6 +193,15 @@ export default function createVehicle(pos, quat) {
             q = tm.getRotation();
             chassisMesh.position.set(p.x(), p.y(), p.z());
             chassisMesh.quaternion.set(q.x(), q.y(), q.z(), q.w());
+
+            if (mesh != null) {
+                mesh.position.set(p.x(), p.y(), p.z());
+                mesh.quaternion.set(q.x(), q.y(), q.z(), q.w());
+            }
+            controls.target.set(p.x(), p.y(), p.z())
+
+
+
         }
 
         syncList.push(sync);

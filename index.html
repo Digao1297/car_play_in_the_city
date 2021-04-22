@@ -6,11 +6,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Car play in the city</title>
+
+  <link rel="stylesheet" href="./src/style/style.css">
+
   <script src="./lib/ammo.js"></script>
   <script src="./lib/Detector.js"></script>
   <script>
     // - Global variables -
     let TRANSFORM_AUX;
+
     let ZERO_QUATERNION;
     let syncList = [];
     const DISABLE_DEACTIVATION = 4;
@@ -20,7 +24,7 @@
     let camera, controls, scene, renderer;
     let terrainMesh, texture;
     let clock;
-    let materialDynamic, materialStatic, materialInteractive;
+    let materialDynamic, materialStatic, materialInteractive, materialRamp;
 
 
     // Physics variables
@@ -35,6 +39,7 @@
     let timeNextSpawn = time + objectTimePeriod;
     let maxNumObjects = 30;
 
+    let wireframe = false
     // Keybord actions
     let actions = {};
     const keysActions = {
@@ -43,14 +48,33 @@
       "KeyA": 'left',
       "KeyD": 'right'
     };
-  </script>
 
+    function startGame() {
+      document.getElementById("initialPage").style.display = "none";
+    }
+  </script>
 
 </head>
 
 <body>
-  <div id="container"><br /><br /><br /><br /><br />Loading...</div>
-  <div id="speedometer">0.0 km/h</div>
+  <div id="initialPage">
+
+    <div class="controls">
+      Use your <img width="200" src="./assets/images/control.png" /> keys to move around
+    </div>
+    <div id="start">
+      <a id="button" onclick="startGame()">Start</a>
+    </div>
+  </div>
+
+
+
+  <div id="container"></div>
+  <!-- <div id="speedometer">0.0 km/h</div> -->
+  <canvas id="speedometer"></canvas>
+
+  <script src="./src/speed_meter/teslahud.js"></script>
+
   <script type="module" src="./src/index.js">
 
   </script>

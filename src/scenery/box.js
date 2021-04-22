@@ -1,10 +1,21 @@
 import * as THREE from "../../lib/three.module.js";
 
 
-export default function createBox(pos, quat, w, l, h, mass, friction) {
-    const material = mass > 0 ? materialDynamic : materialStatic;
+export default function createBox(pos, quat, w, l, h, mass, friction, ramp = false) {
+    let material
+
     const shape = new THREE.BoxGeometry(w, l, h, 1, 1, 1);
     const geometry = new Ammo.btBoxShape(new Ammo.btVector3(w * 0.5, l * 0.5, h * 0.5));
+
+    if (mass > 0) {
+        material = materialDynamic
+    }
+    else if (ramp) {
+        material = materialRamp
+    }
+    else {
+        material = materialStatic
+    }
 
     if (!mass) mass = 0;
     if (!friction) friction = 1;
