@@ -9,7 +9,6 @@ import createBox from "./scenery/box.js"
 import createVehicle from "./vehicle/vehicle.js"
 import createBuilding from "./scenery/building.js"
 import createParticles from "./scenery/particles.js"
-import createChassisMesh from "./vehicle/chassis.js"
 import createBoxPhysicsStatic from "./scenery/boxPhysicsStatic.js"
 import createBoxPhysicsDynamic from "./scenery/boxPhysicsDynamic.js"
 

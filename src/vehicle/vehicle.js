@@ -9,7 +9,7 @@ export default function createVehicle(pos, quat, wireframe) {
 
     const chassisWidth = 3;
     const chassisHeight = 2;
-    const chassisLength = 4.7;
+    const chassisLength = 4.5;
     const massVehicle = 700;
 
     //back

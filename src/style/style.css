@@ -1,105 +1,122 @@
-body{
-    margin: 0;
+body {
+  margin: 0;
 }
 
 @font-face {
-    font-family: 'MuseoSans_900-webfont';
-    src: url('../../assets/fonts/MuseoSans_900-webfont.ttf');
+  font-family: "MuseoSans_900-webfont";
+  src: url("../../assets/fonts/MuseoSans_900-webfont.ttf");
 }
-#container{
-    width: 100%;
-    height: 100%;
-    display: none;
-}
-
-
-
-
-#speedometer{
-    z-index: 1;
-    position: fixed;
-    left: 50%;
-    bottom: 0px;
-    transform: translate(-50%, -50%);
-    margin: 0 auto;
-}
-#start{
-    z-index: 2;
-    position: absolute;
-    background-image: linear-gradient(#FA8C3F, #F9BF83);
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
+#container {
+  width: 100%;
+  height: 100%;
+  display: none;
 }
 
-#button{
-    width: 200px;
-    height: 100px;
-    
-    border-radius: 50px;
-    background: #F6A561;
-    box-shadow:  27px -27px 51px #e5995a,
-             -27px 27px 51px #ffb168;
+#speedometer {
+  z-index: 1;
+  position: fixed;
+  left: 50%;
+  bottom: 0px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+}
+#start {
+  z-index: 2;
+  position: absolute;
+  background-image: linear-gradient(#fa8c3f, #f9bf83);
+  width: 100%;
+  height: 100%;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 32px;
-    font-family: 'MuseoSans_900-webfont';
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-#button:hover{
-    cursor: pointer;
-    opacity: 0.6;
+#button {
+  width: 200px;
+  height: 100px;
+
+  border-radius: 50px;
+  background: #f6a561;
+  box-shadow: 27px -27px 51px #e5995a, -27px 27px 51px #ffb168;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 32px;
+  font-family: "MuseoSans_900-webfont";
 }
 
-
-.controls{
-    z-index: 3;
-    position: fixed;
-    left: 50%;
-    bottom: 0px;
-    transform: translate(-50%, -50%);
-    margin: 0 auto;
-
-    color: white;
-    font-size: 16px;
-    font-family: 'MuseoSans_900-webfont';
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#button:hover {
+  cursor: pointer;
+  opacity: 0.6;
 }
 
-#changeWeather{
-    z-index: 1;
-    position: absolute;
-    right: 20px;
-    top: 20px;
+.controls {
+  z-index: 3;
+  position: fixed;
+  left: 50%;
+  bottom: 0px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
 
-    background-color: #FA8C3F;
-    padding: 1rem;
-    width: 50px;
-    
-    color: white;
-    font-size: 16px;
-    font-family: 'MuseoSans_900-webfont';
+  color: white;
+  font-size: 16px;
+  font-family: "MuseoSans_900-webfont";
 
-    border-radius: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#changeWeather:hover{
-    cursor: pointer;
-    opacity: 0.6;
+#changeWeather {
+  z-index: 1;
+  position: absolute;
+  right: 20px;
+  top: 20px;
 
+  background-color: #fa8c3f;
+  padding: 1rem;
+  width: 50px;
+
+  color: white;
+  font-size: 16px;
+  font-family: "MuseoSans_900-webfont";
+
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#changeWeather:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+footer {
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #f6a561;
+  color: white;
+  text-align: center;
+
+  font-size: 14px;
+  font-family: "MuseoSans_900-webfont";
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+footer > a {
+  text-decoration: none;
+  color: white;
 }
