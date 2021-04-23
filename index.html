@@ -1,95 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car play in the city</title>
+    <link
+      rel="shortcut icon"
+      href="./assets/images/favicon.ico"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="./src/style/style.css" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title> Car play in the city</title>
-  <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="./src/style/style.css">
+    <script src="./lib/ammo.js"></script>
+    <script src="./lib/Detector.js"></script>
+    <script>
+      // - Global variables -
+      let TRANSFORM_AUX;
 
-  <script src="./lib/ammo.js"></script>
-  <script src="./lib/Detector.js"></script>
-  <script>
-    // - Global variables -
-    let TRANSFORM_AUX;
+      let ZERO_QUATERNION;
+      let syncList = [];
+      const DISABLE_DEACTIVATION = 4;
+      let soundCarRun, soundCarStop;
 
-    let ZERO_QUATERNION;
-    let syncList = [];
-    const DISABLE_DEACTIVATION = 4;
+      // Graphics variables
+      let container, stats, speedometer;
+      let camera, controls, scene, renderer;
+      let terrainMesh, texture;
+      let clock;
+      let materialDynamic, materialStatic, materialInteractive, materialRamp;
+      let weather = false;
 
-    // Graphics variables
-    let container, stats, speedometer;
-    let camera, controls, scene, renderer;
-    let terrainMesh, texture;
-    let clock;
-    let materialDynamic, materialStatic, materialInteractive, materialRamp;
-    let weather = false;
+      // Physics variables
+      let collisionConfiguration;
+      let dispatcher;
+      let broadphase;
+      let solver;
+      let physicsWorld;
 
-    // Physics variables
-    let collisionConfiguration;
-    let dispatcher;
-    let broadphase;
-    let solver;
-    let physicsWorld;
+      let time = 0;
+      let objectTimePeriod = 3;
+      let timeNextSpawn = time + objectTimePeriod;
+      let maxNumObjects = 30;
 
-    let time = 0;
-    let objectTimePeriod = 3;
-    let timeNextSpawn = time + objectTimePeriod;
-    let maxNumObjects = 30;
+      let wireframe = false;
+      // Keybord actions
+      let actions = {};
+      const keysActions = {
+        KeyW: "acceleration",
+        KeyS: "braking",
+        KeyA: "left",
+        KeyD: "right",
+      };
+    </script>
+  </head>
 
-    let wireframe = false
-    // Keybord actions
-    let actions = {};
-    const keysActions = {
-      "KeyW": 'acceleration',
-      "KeyS": 'braking',
-      "KeyA": 'left',
-      "KeyD": 'right'
-    };
+  <body>
+    <div id="container"></div>
 
+    <script type="module" src="./src/index.js"></script>
 
-  </script>
-
-</head>
-
-<body>
-
-  <div id="container"></div>
-
-
-  <script type="module" src="./src/index.js"></script>
-
-  <div id="initialPage">
-    <div class="controls">
-      Use your <img width="200" src="./assets/images/control.png" /> keys to move around
+    <div id="initialPage">
+      <div class="controls">
+        Use your <img width="200" src="./assets/images/control.png" /> keys to
+        move around
+      </div>
+      <div id="start">
+        <a id="button">Start</a>
+      </div>
+      <footer>
+        <p>Alunos:&nbsp</p>
+        <a href="https://github.com/jose-gilberto" target="_blank"
+          >&nbspJose Gilberto
+        </a>
+        <a href="https://github.com/bed72" target="_blank"
+          >, &nbspGabriel Ramos
+        </a>
+        <a href="https://github.com/digao1297" target="_blank"
+          >, &nbspRodrigo
+        </a>
+        <a>&nbsp e &nbspRubens </a>
+      </footer>
     </div>
-    <div id="start">
-      <a id="button">Start</a>
-    </div>
-    <footer>
-      <p>Alunos:&nbsp</p>
-      <a href="https://github.com/jose-gilberto" target="_blank">&nbspJose Gilberto </a>
-      <a href="https://github.com/bed72" target="_blank">, &nbspGabriel Ramos </a>
-      <a href="https://github.com/digao1297" target="_blank">, &nbspRodrigo </a>
-      <a>&nbsp e &nbspRubens </a>
-    
-    </footer>
-  </div>
 
+    <a id="changeWeather"> clima </a>
 
-
-  <a id="changeWeather">
-    clima
-  </a>
-
-
-  <canvas id="speedometer"></canvas>
-  <script src="./src/speed_meter/teslahud.js"></script>
-
-
-  
-</body>
-
+    <canvas id="speedometer"></canvas>
+    <script src="./src/speed_meter/teslahud.js"></script>
+  </body>
 </html>
